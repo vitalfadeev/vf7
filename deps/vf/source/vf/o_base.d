@@ -60,79 +60,17 @@ O {
     _go3 (void* o, void* e, REG evt, REG d) {
         with (cast(O*)o) {
             if (state !is null) {
-                process_map (o,e,evt,d, &state.map);
+                state.go (o,state,evt,d);
             }
         }
     }
-
-    static
-    void
-    process_map (void* o, void* e, REG evt, REG d,  Map* map) {
-        auto rec = map.recs.ptr;
-        auto RCX = map.recs.length;
-        for (; RCX != 0; rec++, RCX--)
-            if (evt == rec.key)
-                rec.go (o,e,evt,d);
-    }
-
-
-    //E*                 main_e;
-    //App_input_event    app_input_event;
-
-    //static
-    //void
-    //_go (O* o, void* e, REG evt, REG d) {
-    //    // global_context
-    //    // each global input event
-    //    with (o)
-    //    while (doit) {
-    //        auto ret = global_input.read (&app_input_event.input_event);
-    //        if (!ret) continue;
-
-    //        evt = app_input_event.input_event.reg;
-
-    //        // E
-    //        if (e !is null) {
-    //            auto m = cast (E*) e;
-    //            m.state.go (o,m,evt,0);
-    
-    //            // each local input event
-    //            while (!local_input.empty) {
-    //                local_input.read (&app_input_event.input_event);
-    //                evt = app_input_event.input_event.reg;
-    //                // process local input event
-    //                m.state.go (o,m,evt,0);
-    //            }
-    //        }
-    //    }
-    //}
 }
-
-
-struct
-E {
-    State* state;
-}
-
-
 
 // input  line
 // direct line
 // 1   2   3   4   5   6   7
 // key key key             key
 //             drt drt drt 
-
-
-
-
-struct
-App_input_event {
-    Event event;  // read ("/dev/input/eventX", &app_input_event.input_event, 1);
-    int   ext1;
-    int   ext2;
-}
-
-
 
 // map
 //   to text

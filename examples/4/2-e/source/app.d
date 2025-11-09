@@ -12,10 +12,13 @@ import vf.map         : Map;
 void
 main () {
     O o;
-    o.state = &state_base;
+    o.state = &e_state_base._this;
     o.open ();
     o.go (&o,null,0,0);
 }
+
+// global keys - translate
+// local keys  - quit, ctrl+a
 
 //
 __gshared
@@ -80,3 +83,40 @@ _go_ctrl_a (void* o, void* e, REG evt, REG d) {
         writeln ("CTRL+A");
     }
 }
+
+//
+struct
+E_state {
+    State _this;
+    State _next;
+
+    static
+    void
+    _go (void* o, void* e, REG evt, REG d) {
+        with (cast(E_state*)e) {
+            _this.go (o,&_this,evt,d);
+            _next.go (o,&_next,evt,d);
+        }
+    };
+}
+
+__gshared
+E_state e_state_base =
+    E_state (
+        // global
+        State (
+            Map ([
+                Map.Rec (EVT_KEY_ESC_PRESSED,       &_go_esc),
+                Map.Rec (APP_CODE_QUIT,             &_go_quit),
+                Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
+            ]),
+            &State._go
+        ),
+        // local
+        State (
+            Map ([
+                //
+            ]),
+            &State._go
+        )
+    );
