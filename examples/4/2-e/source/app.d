@@ -12,7 +12,7 @@ import vf.map         : Map;
 void
 main () {
     O o;
-    o.state = &e_state_base._this;
+    o.state = cast(State*)&e_state_base;
     o.open ();
     o.go (&o,null,0,0);
 }
