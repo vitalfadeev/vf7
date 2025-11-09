@@ -1,0 +1,13 @@
+{
+	"name"        : "vf",
+	"authors"     : [
+		"vf"
+	],
+	"description" : "A minimal D application.",
+	"license"     : "proprietary",
+	"dependencies" : {
+	},
+	"versions"     : [],
+	"dflags"       : [ "-mixin=mixins.d" ],
+	"buildOptions": ["ignoreDeprecations"],
+}

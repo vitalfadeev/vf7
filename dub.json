@@ -1,0 +1,14 @@
+{
+	"name"        : "vf7",
+	"authors"     : [
+		"vf"
+	],
+	"description" : "A minimal D application.",
+	"license"     : "proprietary",
+	"dependencies" : {
+		"vf"    : {"path": "./deps/vf"},
+	},
+	"versions"     : [],
+	"dflags"       : [ "-mixin=mixins.d" ],
+	"buildOptions": ["ignoreDeprecations"],
+}

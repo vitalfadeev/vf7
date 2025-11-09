@@ -1,0 +1,17 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/vf7
+vf7.so
+vf7.dylib
+vf7.dll
+vf7.a
+vf7.lib
+vf7-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst
+mixins.d

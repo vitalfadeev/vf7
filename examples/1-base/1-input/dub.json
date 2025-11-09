@@ -1,0 +1,12 @@
+{
+	"name"        : "example_1",
+	"authors"     : [
+		"vf"
+	],
+	"description" : "A minimal D application.",
+	"license"     : "proprietary",
+	"dependencies" : {
+		"vf"    : {"path": "../../../deps/vf"},
+	},
+	"versions"     : [],
+}
