@@ -11,4 +11,7 @@
 	"versions"     : [],
 	"dflags"       : [ "-mixin=mixins.d" ],
 	"buildOptions" : ["ignoreDeprecations"],
+	"dflags-ldc": [
+  		"--link-defaultlib-shared"
+	]
 }
