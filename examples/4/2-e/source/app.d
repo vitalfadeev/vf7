@@ -1,7 +1,7 @@
 import std.stdio      : writeln,writefln;
 import vf.types       : REG;
 import vf.key_codes   : EVT_KEY_ESC_PRESSED;
-import vf.key_codes   : APP_CODE_QUIT;
+import vf.key_codes   : EVT_APP_QUIT;
 import vf.key_codes   : EVT_KEY_LEFTCTRL_PRESSED,EVT_KEY_LEFTCTRL_RELEASED;
 import vf.key_codes   : EVT_KEY_A_PRESSED;
 import vf.o_base      : O;
@@ -24,8 +24,7 @@ __gshared
 State state_base =
     State (
         Map ([
-            Map.Rec (EVT_KEY_ESC_PRESSED,       &_go_esc),
-            Map.Rec (APP_CODE_QUIT,             &_go_quit),
+            Map.Rec (EVT_APP_QUIT,              &_go_quit),
             Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
         ])
     );
@@ -54,7 +53,7 @@ _go_esc (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         // generate new event and put into local input
         writeln ("  put Event: APP_CODE_QUIT");
-        local_input.put_reg (APP_CODE_QUIT);
+        local_input.put_reg (EVT_APP_QUIT);
     }
 }
 
@@ -62,7 +61,7 @@ void
 _go_ctrl_pressed (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         writeln ("> CTRL pressed");
-        state = &state_ctrl_pressed;
+        (cast(E_state*)state)._next = state_ctrl_pressed;
     }
 }
 
@@ -70,7 +69,7 @@ void
 _go_ctrl_released (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         writeln ("> CTRL released");
-        state = &state_base;
+        (cast(E_state*)state)._next = state_base;
     }
 }
 
@@ -78,6 +77,13 @@ void
 _go_ctrl_a (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         writeln ("CTRL+A");
+    }
+}
+
+void
+_go_a_pressed (void* o, void* e, REG evt, REG d) {
+    with (cast(O*)o) {
+        writeln ("A! OK!");
     }
 }
 
@@ -104,15 +110,16 @@ E_state e_state_base =
         State (
             Map ([
                 Map.Rec (EVT_KEY_ESC_PRESSED,       &_go_esc),
-                Map.Rec (APP_CODE_QUIT,             &_go_quit),
-                Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
             ]),
             &E_state._go
         ),
         // local
         State (
             Map ([
-                //
+                Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
+                Map.Rec (EVT_KEY_A_PRESSED,         &_go_a_pressed),
+                Map.Rec (EVT_APP_QUIT,              &_go_quit),
             ])
         )
     );
+
