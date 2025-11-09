@@ -14,7 +14,7 @@ main () {
     O o;
     o.state = cast(State*)&e_state_base;
     o.open ();
-    o.go (&o,null,0,0);
+    o.go (&o,o.state,0,0);
 }
 
 // global keys - translate
@@ -94,7 +94,7 @@ E_state {
     void
     _go (void* o, void* e, REG evt, REG d) {
         with (cast(E_state*)e) {
-            State._go (o,&_this,evt,d);
+            State._go (o,e,evt,d);
             _next. go (o,&_next,evt,d);
         }
     };

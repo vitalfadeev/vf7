@@ -13,6 +13,9 @@ O {
     Input              input;
     Local_input!Event  local_input;
     State*             state;
+    // update
+    // output
+    // wait
 
     void
     open () {
@@ -59,8 +62,8 @@ O {
     void
     _go3 (void* o, void* e, REG evt, REG d) {
         with (cast(O*)o) {
-            if (state !is null) {
-                state.go (o,state,evt,d);
+            if (e !is null) {
+                (cast(State*)e).go (o,e,evt,d);
             }
         }
     }
