@@ -77,6 +77,10 @@ Event {
         REG     reg;
     }
 
+    this (REG _reg) {
+        reg = _reg;
+    }
+
     bool
     opEquals (REG b) const {
         return reg == b;

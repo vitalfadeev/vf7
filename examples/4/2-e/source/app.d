@@ -1,6 +1,5 @@
 import std.stdio      : writeln,writefln;
-import vf.types       : GO,REG;
-import vf.input       : Event;
+import vf.types       : REG;
 import vf.key_codes   : EVT_KEY_ESC_PRESSED;
 import vf.key_codes   : APP_CODE_QUIT;
 import vf.key_codes   : EVT_KEY_LEFTCTRL_PRESSED,EVT_KEY_LEFTCTRL_RELEASED;
@@ -55,9 +54,7 @@ _go_esc (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         // generate new event and put into local input
         writeln ("  put Event: APP_CODE_QUIT");
-        Event event_quit;
-        event_quit.reg = APP_CODE_QUIT;
-        local_input.put (&event_quit);
+        local_input.put_reg (APP_CODE_QUIT);
     }
 }
 

@@ -27,4 +27,8 @@ Local_input (EVT) {
         s ~= *evt;
     }
 
+    void
+    put_reg (typeof (EVT.reg) _reg) {
+        s ~= EVT (_reg);
+    }
 }
