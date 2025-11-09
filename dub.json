@@ -10,5 +10,5 @@
 	},
 	"versions"     : [],
 	"dflags"       : [ "-mixin=mixins.d" ],
-	"buildOptions": ["ignoreDeprecations"],
+	"buildOptions" : ["ignoreDeprecations"],
 }

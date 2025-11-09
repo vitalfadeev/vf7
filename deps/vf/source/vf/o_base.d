@@ -9,10 +9,10 @@ import vf.map         : Map;
 ///
 struct
 O {
-    GO                 go = &_go;
-    Input              input;
-    Local_input!Event  local_input;
-    State*             state;
+    GO          go = &_go;
+    Input       input;
+    Local_input local_input;
+    State*      state;
     // update
     // output
     // wait

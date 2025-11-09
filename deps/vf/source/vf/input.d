@@ -3,7 +3,7 @@ module vf.input;
 import core.sys.posix.unistd   : read, close;
 import core.sys.posix.fcntl    : open, O_RDONLY, O_NONBLOCK;
 import core.sys.posix.sys.time : timeval;
-import std.exception           : enforce;
+//import std.exception           : enforce;
 import vf.types;
 import vf.key_codes;
 
@@ -49,7 +49,10 @@ Device {
         const flags = non_blocking ? (O_RDONLY | O_NONBLOCK) : O_RDONLY;
         auto d = Device ();
         d.fd = open (path.ptr, flags);
-        enforce (d.fd >= 0, "Failed to open evdev device: " ~ path);
+        //enforce (d.fd >= 0, "Failed to open evdev device: " ~ path);
+        if (d.fd == 0) {
+            assert (0, "Failed to open evdev device: ");
+        }
         return d;
     }
 

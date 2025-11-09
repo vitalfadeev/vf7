@@ -1,20 +1,23 @@
 module vf.local_input;
 
+import vf.input : Event;
+import vf.bc_array : Array;
+
 //
 struct
-Local_input (EVT) {
-    EVT[] s;
-    EVT   event;
+Local_input {
+    Array!Event s;
+    Event       event;
 
     void
     open () {
-        //
+        s.setup (8);
     }
 
     void
     read () {
         event = s[0];
-        s = s[1..$];
+        s.remove_at (0);
     }
 
     bool
@@ -23,12 +26,12 @@ Local_input (EVT) {
     }
 
     void
-    put (EVT* evt) {
-        s ~= *evt;
+    put (Event* evt) {
+        s.add (*evt);
     }
 
     void
-    put_reg (typeof (EVT.reg) _reg) {
-        s ~= EVT (_reg);
+    put_reg (typeof (Event.reg) _reg) {
+        s.add (Event (_reg));
     }
 }
