@@ -94,8 +94,8 @@ E_state {
     void
     _go (void* o, void* e, REG evt, REG d) {
         with (cast(E_state*)e) {
-            _this.go (o,&_this,evt,d);
-            _next.go (o,&_next,evt,d);
+            State._go (o,&_this,evt,d);
+            _next. go (o,&_next,evt,d);
         }
     };
 }
@@ -110,13 +110,12 @@ E_state e_state_base =
                 Map.Rec (APP_CODE_QUIT,             &_go_quit),
                 Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
             ]),
-            &State._go
+            &E_state._go
         ),
         // local
         State (
             Map ([
                 //
-            ]),
-            &State._go
+            ])
         )
     );
