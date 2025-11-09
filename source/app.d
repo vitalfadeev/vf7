@@ -91,8 +91,15 @@ _go_a_pressed (void* o, void* e, REG evt, REG d) {
 //
 struct
 E_state {
-    State  _this;
-    State* _next;
+    State  _this =
+        State (
+            Map ([
+                Map.Rec (EVT_KEY_ESC_PRESSED,       &_go_esc),
+            ]),
+            &_go
+        );
+
+    State* _next = &state_base;
 
     static
     void
@@ -105,16 +112,5 @@ E_state {
 }
 
 __gshared
-E_state e_state_base =
-    E_state (
-        // global
-        State (
-            Map ([
-                Map.Rec (EVT_KEY_ESC_PRESSED,       &_go_esc),
-            ]),
-            &E_state._go
-        ),
-        // local
-        &state_base
-    );
+E_state e_state_base;
 

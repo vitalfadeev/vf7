@@ -26,6 +26,7 @@ State state_base =
         Map ([
             Map.Rec (EVT_APP_QUIT,              &_go_quit),
             Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
+            Map.Rec (EVT_KEY_A_PRESSED,         &_go_a_pressed),
         ])
     );
 
@@ -61,7 +62,7 @@ void
 _go_ctrl_pressed (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         writeln ("> CTRL pressed");
-        (cast(E_state*)state)._next = state_ctrl_pressed;
+        (cast(E_state*)state)._next = &state_ctrl_pressed;
     }
 }
 
@@ -69,7 +70,7 @@ void
 _go_ctrl_released (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         writeln ("> CTRL released");
-        (cast(E_state*)state)._next = state_base;
+        (cast(E_state*)state)._next = &state_base;
     }
 }
 
@@ -90,15 +91,15 @@ _go_a_pressed (void* o, void* e, REG evt, REG d) {
 //
 struct
 E_state {
-    State _this;
-    State _next;
+    State  _this;
+    State* _next;
 
     static
     void
     _go (void* o, void* e, REG evt, REG d) {
         with (cast(E_state*)e) {
             State._go (o,e,evt,d);
-            _next. go (o,&_next,evt,d);
+            _next. go (o,_next,evt,d);
         }
     };
 }
@@ -114,12 +115,6 @@ E_state e_state_base =
             &E_state._go
         ),
         // local
-        State (
-            Map ([
-                Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
-                Map.Rec (EVT_KEY_A_PRESSED,         &_go_a_pressed),
-                Map.Rec (EVT_APP_QUIT,              &_go_quit),
-            ])
-        )
+        &state_base
     );
 
