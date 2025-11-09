@@ -1,121 +1,126 @@
-import std.stdio;
-import vf.types;
-import vf.key_codes;
+import std.stdio      : writeln,writefln;
+import vf.types       : REG;
+import vf.key_codes   : EVT_KEY_ESC_PRESSED;
+import vf.key_codes   : EVT_APP_QUIT;
+import vf.key_codes   : EVT_KEY_LEFTCTRL_PRESSED,EVT_KEY_LEFTCTRL_RELEASED;
+import vf.key_codes   : EVT_KEY_A_PRESSED;
+import vf.o_base      : O;
+import vf.state       : State;
+import vf.map         : Map;
 
 void
 main () {
-    E_translate e;
-
-	O o = 
-        O (
-            &e._ths
-        );
-
-	o.global_input.input_device = 
-		Input_device.open_read_only (
-            "/dev/input/event8", 
-            /* non_blocking */ false
-        );
-
-	o.go (
-		&o,
-		o.main_e,
-		0,
-		0
-	);
+    O o;
+    o.state = cast(State*)&e_state_base;
+    o.open ();
+    o.go (&o,o.state,0,0);
 }
 
-__gshared:
-struct
-E_translate {
-    E _ths = E (&state_global_translate);
-    E next = E (&state_base);
+// global keys - translate
+// local keys  - quit, ctrl+a
 
-    __gshared
-    State state_global_translate = State ( 
+//
+__gshared
+State state_base =
+    State (
         Map ([
-            Map.Rec (EVT_KEY_ESC_PRESSED,       &act_put_quit),
-        ]),
-        &_global_translate_go
+            Map.Rec (EVT_KEY_ESC_PRESSED,       &_go_esc),
+            Map.Rec (EVT_APP_QUIT,              &_go_quit),
+            Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
+        ])
     );
+
+__gshared
+State state_ctrl_pressed =
+    State (
+        Map ([
+            Map.Rec (EVT_KEY_LEFTCTRL_RELEASED, &_go_ctrl_released),
+            Map.Rec (EVT_KEY_A_PRESSED,         &_go_ctrl_a),
+        ])
+    );
+
+//
+void
+_go_quit (void* o, void* e, REG evt, REG d) {
+    with (cast(O*)o) {
+        writeln ("QUIT");
+        go = null;
+    }
+}
+
+
+void
+_go_esc (void* o, void* e, REG evt, REG d) {
+    with (cast(O*)o) {
+        // generate new event and put into local input
+        writeln ("  put Event: APP_CODE_QUIT");
+        local_input.put_reg (EVT_APP_QUIT);
+    }
+}
+
+void
+_go_ctrl_pressed (void* o, void* e, REG evt, REG d) {
+    with (cast(O*)o) {
+        writeln ("> CTRL pressed");
+        state = &state_ctrl_pressed;
+    }
+}
+
+void
+_go_ctrl_released (void* o, void* e, REG evt, REG d) {
+    with (cast(O*)o) {
+        writeln ("> CTRL released");
+        state = &state_base;
+    }
+}
+
+void
+_go_ctrl_a (void* o, void* e, REG evt, REG d) {
+    with (cast(O*)o) {
+        writeln ("CTRL+A");
+    }
+}
+
+void
+_go_a_pressed (void* o, void* e, REG evt, REG d) {
+    with (cast(O*)o) {
+        writeln ("A! OK!");
+    }
+}
+
+//
+struct
+E_state {
+    State _this;
+    State _next;
 
     static
     void
-    _global_translate_go (O* o, void* e, REG evt, REG d) {
-        // translate
-        State._go (o,e,evt,d);  // base go
-        // next
-        auto m = &((cast(E_translate*)e).next);
-        m.state.go (o,m,evt,d);
-    }
+    _go (void* o, void* e, REG evt, REG d) {
+        with (cast(E_state*)e) {
+            State._go (o,e,evt,d);
+            _next. go (o,&_next,evt,d);
+        }
+    };
 }
 
-State state_base = State ( 
-    Map ([
-        Map.Rec (EVT_KEY_A_PRESSED,         &act_writeln_OK),
-        Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &act_ctrl),
-        Map.Rec (EVT_APP_QUIT,              &act_quit),
-    ])
-);
+__gshared
+E_state e_state_base =
+    E_state (
+        // global
+        State (
+            Map ([
+                Map.Rec (EVT_KEY_ESC_PRESSED,       &_go_esc),
+            ]),
+            &E_state._go
+        ),
+        // local
+        State (
+            Map ([
+                Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
+                Map.Rec (EVT_KEY_A_PRESSED,         &_go_a_pressed),
+                Map.Rec (EVT_APP_QUIT,              &_go_quit),
+            ])
+        )
+    );
 
-State state_ctrl_pressed = State (
-    Map ([
-        Map.Rec (EVT_KEY_LEFTCTRL_RELEASED, &act__init_default_map),
-        Map.Rec (EVT_KEY_A_PRESSED,         &act_writeln_CTRL_A),
-    ])
-);
-
-Act act_put_quit = Act (
-    "put_quit",
-    (o,e,evt,d) { 
-        Input_event _evt; 
-        _evt.reg = EVT_APP_QUIT; 
-        o.local_input.put (&_evt);
-    }
-);
-
-Act act_writeln_OK = Act (
-    "writeln_OK",
-    (o,e,evt,d) { 
-        writeln ("OK!"); 
-    }
-);
-
-Act act_quit = Act (
-    "Quit",
-    (o,e,evt,d) { 
-        o.doit = false;
-    }
-);
-
-Act act_ctrl = Act (
-    "Ctrl",
-    (o,e,evt,d) { 
-        (cast(E*)e).state = &state_ctrl_pressed;
-        writeln ("ctrl!");
-        writeln ("> state ctrl_pressed");
-    }
-);
-Act act_writeln_CTRL_A = Act (
-    "Ctrl",
-    (o,e,evt,d) { 
-        writeln ("CTRL_A!");
-    }
-);
-
-Act act__init_default_map = Act (
-    "init_default_map",
-    (o,e,evt,d) { 
-        (cast(E*)e).state = &state_base;
-        writeln ("> state base");
-    }
-);
-
-// play sound
-// - load wav
-// PipeWire
-// - ctx
-// - stream
-// - connect to pw-service
-// - send data to pw-buffer
-// - process callback events

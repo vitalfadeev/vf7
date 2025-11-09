@@ -10,9 +10,9 @@ import vf.key_codes;
 
 struct
 Input {
-    Device      device;
-    Event       event;
-    Device*     event_device;
+    Device  device;
+    Event   event;
+    Device* event_device;
 
     void
     open () {
