@@ -5,5 +5,5 @@ import vf.state;
 
 struct
 E {
-    State* state;
+    State state;
 }
