@@ -39,8 +39,8 @@ Stacked_e {
     void
     _go (void* o, void* e, REG evt, REG d) {
         with (cast(Stacked_e*)e) {
-            State._go (o,&_this,evt,d);
-            State._go (o,&_next,evt,d);
+            _this.state._go (o,&_this,evt,d);
+            _next.state._go (o,&_next,evt,d);
         }
     };
 }
