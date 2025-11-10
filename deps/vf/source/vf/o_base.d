@@ -34,7 +34,7 @@ O {
 
             // process input event
             evt = input.event.reg;
-            _go2 (o,e,evt,d);
+            _go2 (o,ego,evt,d);
         }
     }
 
