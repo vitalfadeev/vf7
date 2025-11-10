@@ -13,7 +13,6 @@ O {
     GO          go = &_go;
     Input       input;
     Local_input local_input;
-    //State*      state;
     E*          main_e;
     // update
     // output
