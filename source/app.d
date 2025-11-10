@@ -33,7 +33,7 @@ Stacked_e {
             Map.Rec (EVT_KEY_ESC_PRESSED,       &_go_esc),
         ]);
 
-        State.process_map (o,e,evt,d, &map);
+        process_map (o,e,evt,d, &map);
         with (cast(Stacked_e*)e) {
             _next (o,&_next,evt,d);
         }
@@ -55,7 +55,7 @@ States {
             Map.Rec (EVT_KEY_A_PRESSED,         &_go_a_pressed),
         ]);
 
-        State.process_map (o,e,evt,d, &map);
+        process_map (o,e,evt,d, &map);
     }
 
     static
@@ -66,9 +66,19 @@ States {
             Map.Rec (EVT_KEY_A_PRESSED,         &_go_ctrl_a),
         ]);
 
-        State.process_map (o,e,evt,d, &map);
+        process_map (o,e,evt,d, &map);
     }
 }
+
+void
+process_map (void* o, void* e, REG evt, REG d,  Map* map) {
+    auto rec = map.recs.ptr;
+    auto RCX = map.recs.length;
+    for (; RCX != 0; rec++, RCX--)
+        if (evt == rec.key)
+            rec.go (o,e,evt,d);
+}
+
 
 //
 void
