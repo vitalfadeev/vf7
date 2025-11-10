@@ -6,32 +6,17 @@ import vf.map;
 struct
 State {
     GO   go  = &_go;
-    Map* map;
-
-    this (Map* _map) {
-        this.go  = &_go;
-        this.map = _map;
-    }
+    //Map* map;
 
     this (GO _go) {
         this.go = _go;
     }
 
-    this (GO _go, Map* _map) {
-        this.go  = _go;
-        this.map = _map;
-    }
-
-    this (Map* _map, GO _go) {
-        this.map = _map;
-        this.go  = _go;
-    }
-
     static
     void
     _go (void* o, void* e, REG evt, REG d) {
-        if (e !is null)
-            process_map (o,e,evt,d, (cast (State*)e).map);
+        //if (e !is null)
+        //    process_map (o,e,evt,d, (cast (State*)e).map);
     };
 
     static
