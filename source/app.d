@@ -12,9 +12,9 @@ import vf.e_base      : E;
 void
 main () {
     O o;
-    o.main_e = cast (E*) new Stacked_e ();
+    o.ego = cast (E*) new Stacked_e ();
     o.open ();
-    o.go (&o,o.main_e,0,0);
+    o.go (&o,o.ego,0,0);
 }
 
 struct

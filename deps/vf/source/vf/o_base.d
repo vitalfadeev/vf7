@@ -5,7 +5,6 @@ import vf.input       : Input,Event;
 import vf.local_input : Local_input;
 import vf.state       : State;
 import vf.map         : Map;
-import vf.e_base      : E;
 
 ///
 struct
@@ -13,7 +12,7 @@ O {
     GO          go = &_go;
     Input       input;
     Local_input local_input;
-    E*          main_e;
+    void*       ego;
     // update
     // output
     // wait
