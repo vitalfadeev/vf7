@@ -18,19 +18,17 @@ alias KEY = REG;
 
 
 //
-mixin template 
+template 
 Map_init (Pairs...) {
     import std.conv : to;
     import vf.map   : _Map_init;
 
-    enum string code = "
+    enum string Map_init = "
         static Map map = {" ~ 
             (Pairs.length/2).to!string ~ ", 
             [\n" ~ _Map_init!(Pairs).result ~ "]
         };
         ";
-
-    mixin (code);
 }
 
 void

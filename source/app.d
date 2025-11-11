@@ -35,9 +35,9 @@ Stacked_e {
     static
     void 
     _this_state (void* o, void* e, REG evt, REG d) {
-        mixin Map_init!(
+        mixin (Map_init!(
             EVT_KEY_ESC_PRESSED,       _go_esc,
-        );
+        ));
 
         process_map (o,e,evt,d, &map);
 
@@ -56,12 +56,12 @@ States {
     static
     void 
     state_base (void* o, void* e, REG evt, REG d) {
-        mixin Map_init!(
+        mixin (Map_init!(
             EVT_APP_QUIT,              _go_quit,
             EVT_KEY_LEFTCTRL_PRESSED,  _go_ctrl_pressed,
             EVT_KEY_A_PRESSED,         _go_a_pressed,
             /* EVT_KEY_Q_PRESSED,         _go_play_a), */
-        );
+        ));
 
         process_map (o,e,evt,d, &map);
     }
@@ -69,10 +69,10 @@ States {
     static
     void 
     state_ctrl_pressed (void* o, void* e, REG evt, REG d) {
-        mixin Map_init!(
+        mixin (Map_init!(
             EVT_KEY_LEFTCTRL_RELEASED, _go_ctrl_released,
             EVT_KEY_A_PRESSED,         _go_ctrl_a,
-        );
+        ));
 
         process_map (o,e,evt,d, &map);
     }
