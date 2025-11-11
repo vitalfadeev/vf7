@@ -29,9 +29,9 @@ Stacked_e {
     static
     void 
     _this_state (void* o, void* e, REG evt, REG d) {
-        static Map map = Map ([
+        static Map map = {1, [
             Map.Rec (EVT_KEY_ESC_PRESSED,       &_go_esc),
-        ]);
+        ]};
 
         process_map (o,e,evt,d, &map);
         with (cast(Stacked_e*)e) {
@@ -49,11 +49,11 @@ States {
     static
     void 
     state_base (void* o, void* e, REG evt, REG d) {
-        static Map map = Map ([
+        static Map map = {3, [
             Map.Rec (EVT_APP_QUIT,              &_go_quit),
             Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
             Map.Rec (EVT_KEY_A_PRESSED,         &_go_a_pressed),
-        ]);
+        ]};
 
         process_map (o,e,evt,d, &map);
     }
@@ -61,10 +61,10 @@ States {
     static
     void 
     state_ctrl_pressed (void* o, void* e, REG evt, REG d) {
-        static __gshared Map map = Map ([
+        static __gshared Map map = {2, [
             Map.Rec (EVT_KEY_LEFTCTRL_RELEASED, &_go_ctrl_released),
             Map.Rec (EVT_KEY_A_PRESSED,         &_go_ctrl_a),
-        ]);
+        ]};
 
         process_map (o,e,evt,d, &map);
     }
@@ -72,8 +72,8 @@ States {
 
 void
 process_map (void* o, void* e, REG evt, REG d,  Map* map) {
-    auto rec = map.s.ptr;
-    auto RCX = map.s.length;
+    auto RCX = map.length;
+    auto rec = map.ptr;
     for (; RCX != 0; rec++, RCX--)
         if (evt == rec.key)
             rec.go (o,e,evt,d);
