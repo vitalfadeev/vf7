@@ -4,7 +4,7 @@ import vf.types       : GO,REG;
 import vf.input       : Input,Event;
 import vf.local_input : Local_input;
 import vf.state       : State;
-import vf.map         : Map;
+import vf.map         : GO_map;
 
 ///
 struct

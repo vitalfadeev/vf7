@@ -6,21 +6,21 @@ import vf.key_codes    : EVT_KEY_LEFTCTRL_PRESSED,EVT_KEY_LEFTCTRL_RELEASED;
 import vf.key_codes    : EVT_KEY_A_PRESSED;
 import vf.key_codes    : EVT_KEY_Q_PRESSED;
 import vf.o_base       : O;
-import vf.map          : Map_init;
+import vf.map          : GO_map;
 
 extern(C) 
 void 
 main () {
-    Stacked_e ego;
+    GO_stacked go_stacked;
 
     O o;
-    o.ego = &ego;
+    o.ego = &go_stacked;
     o.open ();
     o.go (&o,null,0,0);
 }
 
 struct
-Stacked_e {
+GO_stacked {
     GO _this = &_this_state;
     GO _next = &States.state_base;
 
@@ -31,11 +31,11 @@ Stacked_e {
     static
     void 
     _this_state (void* o, void* e, REG evt, REG d) {
-        mixin (Map_init!(
+        mixin (GO_map!(
             EVT_KEY_ESC_PRESSED,       _go_esc,
         ));
 
-        with (cast(Stacked_e*)e) {
+        with (cast(GO_stacked*)e) {
             _next (o,&_next,evt,d);
         }
     }
@@ -50,7 +50,7 @@ States {
     static
     void 
     state_base (void* o, void* e, REG evt, REG d) {
-        mixin (Map_init!(
+        mixin (GO_map!(
             EVT_APP_QUIT,              _go_quit,
             EVT_KEY_LEFTCTRL_PRESSED,  _go_ctrl_pressed,
             EVT_KEY_A_PRESSED,         _go_a_pressed,
@@ -61,7 +61,7 @@ States {
     static
     void 
     state_ctrl_pressed (void* o, void* e, REG evt, REG d) {
-        mixin (Map_init!(
+        mixin (GO_map!(
             EVT_KEY_LEFTCTRL_RELEASED, _go_ctrl_released,
             EVT_KEY_A_PRESSED,         _go_ctrl_a,
         ));

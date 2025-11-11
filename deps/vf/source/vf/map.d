@@ -4,7 +4,7 @@ import vf.types;
 
 
 struct
-Map {
+_Map {
     size_t length;
     Rec*   ptr;
 
@@ -17,14 +17,18 @@ Map {
 
 alias KEY = REG;
 
+
 //
 template 
-Map_init (Pairs...) {
+GO_map (Pairs...) {
     import std.conv : to;
     import vf.map   : _Map_init;
 
-    enum string Map_init = "
-        static Map map = {" ~ 
+    enum string GO_map = "
+        import vf.map   : _Map;
+        import vf.map   : process_map;
+
+        static _Map map = {" ~ 
             (Pairs.length/2).to!string ~ ", 
             [\n" ~ _Map_init!(Pairs).result ~ "]
         };
@@ -48,7 +52,7 @@ _Map_init (Pairs...) {
         // Рекурсивно обрабатываем оставшиеся пары
         enum rest = _Map_init!(Pairs[2 .. $]).result;
 
-        enum result = "Map.Rec (" ~ Key.stringof ~ ", " ~ (&Value).stringof ~ ")" ~ (rest == "No pairs" ? "\n" : ",\n" ~ rest);
+        enum result = "_Map.Rec (" ~ Key.stringof ~ ", " ~ (&Value).stringof ~ ")" ~ (rest == "No pairs" ? "\n" : ",\n" ~ rest);
     }
     else
     {
@@ -57,7 +61,7 @@ _Map_init (Pairs...) {
 }
 
 void
-process_map (void* o, void* e, REG evt, REG d,  Map* map) {
+process_map (void* o, void* e, REG evt, REG d,  _Map* map) {
     auto RCX = map.length;
     auto rec = map.ptr;
     for (; RCX != 0; rec++, RCX--)
