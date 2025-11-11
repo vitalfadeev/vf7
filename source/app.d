@@ -39,8 +39,6 @@ Stacked_e {
             EVT_KEY_ESC_PRESSED,       _go_esc,
         ));
 
-        process_map (o,e,evt,d, &map);
-
         with (cast(Stacked_e*)e) {
             _next (o,&_next,evt,d);
         }
@@ -62,8 +60,6 @@ States {
             EVT_KEY_A_PRESSED,         _go_a_pressed,
             /* EVT_KEY_Q_PRESSED,         _go_play_a), */
         ));
-
-        process_map (o,e,evt,d, &map);
     }
 
     static
@@ -73,8 +69,6 @@ States {
             EVT_KEY_LEFTCTRL_RELEASED, _go_ctrl_released,
             EVT_KEY_A_PRESSED,         _go_ctrl_a,
         ));
-
-        process_map (o,e,evt,d, &map);
     }
 }
 

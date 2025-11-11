@@ -28,6 +28,8 @@ Map_init (Pairs...) {
             (Pairs.length/2).to!string ~ ", 
             [\n" ~ _Map_init!(Pairs).result ~ "]
         };
+
+        process_map (o,e,evt,d, &map);
         ";
 }
 
