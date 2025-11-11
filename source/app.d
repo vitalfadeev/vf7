@@ -46,7 +46,7 @@ go_base = GO_map!(
     EVT_APP_QUIT,              _go_quit,
     EVT_KEY_LEFTCTRL_PRESSED,  _go_ctrl_pressed,
     EVT_KEY_A_PRESSED,         _go_a_pressed,
-    /* EVT_KEY_Q_PRESSED,         _go_play_a), */
+    EVT_KEY_Q_PRESSED,         _go_play_a,
 );
 
 alias 
@@ -66,14 +66,8 @@ _go_quit (void* o, void* e, REG evt, REG d) {
 }
 
 
-void
-_go_esc (void* o, void* e, REG evt, REG d) {
-    with (cast(O*)o) {
-        // generate new event and put into local input
-        printf ("  put Event: APP_CODE_QUIT\n");
-        local_input.put_reg (EVT_APP_QUIT);
-    }
-}
+alias
+_go_esc = GO_local_event_new!EVT_APP_QUIT;
 
 void
 _go_ctrl_pressed (void* o, void* e, REG evt, REG d) {
@@ -91,34 +85,32 @@ _go_ctrl_released (void* o, void* e, REG evt, REG d) {
     }
 }
 
+alias
+_go_ctrl_a = GO_printf!"CTRL+A\n";
+
+alias
+_go_a_pressed = GO_printf!"A! OK!\n";
+
+alias
+_go_play_a = GO_play!"Play A\n";
+
+//
 void
-_go_ctrl_a (void* o, void* e, REG evt, REG d) {
+GO_printf (alias TEXT) (void* o, void* e, REG evt, REG d) {
+    static char* text = cast(char*)TEXT;
+    printf ("%s", text);
+}
+
+void
+GO_local_event_new (REG EVT) (void* o, void* e, REG evt, REG d) {
+    printf ("  put Event: 0x%X\n", EVT);
     with (cast(O*)o) {
-        printf ("CTRL+A\n");
+        local_input.put_reg (EVT);
     }
 }
 
 void
-_go_a_pressed (void* o, void* e, REG evt, REG d) {
-    with (cast(O*)o) {
-        printf ("A! OK!\n");
-    }
-}
-
-
-GO_play _go_play_a = GO_play (&GO_play._go, cast(char*)"Play A");
-
-struct
-GO_play {
-    GO    go = &_go;
-    char* text;
-
-    static
-    void
-    _go (void* o, void* e, REG evt, REG d) {
-        with (cast(GO_play*)e) {
-            if (text)
-                printf ("%s\n", text);
-        }
-    }
+GO_play (alias TEXT) (void* o, void* e, REG evt, REG d) {
+    static char* text = cast(char*)TEXT;
+    printf ("%s", text);
 }
