@@ -4,6 +4,7 @@ import vf.key_codes    : EVT_KEY_ESC_PRESSED;
 import vf.key_codes    : EVT_APP_QUIT;
 import vf.key_codes    : EVT_KEY_LEFTCTRL_PRESSED,EVT_KEY_LEFTCTRL_RELEASED;
 import vf.key_codes    : EVT_KEY_A_PRESSED;
+import vf.key_codes    : EVT_KEY_Q_PRESSED;
 import vf.o_base       : O;
 import vf.state        : State;
 import vf.map          : Map;
@@ -56,6 +57,7 @@ States {
             Map.Rec (EVT_APP_QUIT,              &_go_quit),
             Map.Rec (EVT_KEY_LEFTCTRL_PRESSED,  &_go_ctrl_pressed),
             Map.Rec (EVT_KEY_A_PRESSED,         &_go_a_pressed),
+            //Map.Rec (EVT_KEY_Q_PRESSED,         cast(GO)&_go_play_a),
         ]};
 
         process_map (o,e,evt,d, &map);
@@ -133,6 +135,9 @@ _go_a_pressed (void* o, void* e, REG evt, REG d) {
 }
 
 
+__gshared
+GO_play _go_play_a = GO_play (&GO_play._go, cast(char*)"Play A");
+
 struct
 GO_play {
     GO    go = &_go;
@@ -142,7 +147,8 @@ GO_play {
     void
     _go (void* o, void* e, REG evt, REG d) {
         with (cast(GO_play*)e) {
-            printf ("%s\n", text);
+            if (text)
+                printf ("%s\n", text);
         }
     }
 }
