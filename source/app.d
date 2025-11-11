@@ -72,8 +72,8 @@ States {
 
 void
 process_map (void* o, void* e, REG evt, REG d,  Map* map) {
-    auto rec = map.recs.ptr;
-    auto RCX = map.recs.length;
+    auto rec = map.s.ptr;
+    auto RCX = map.s.length;
     for (; RCX != 0; rec++, RCX--)
         if (evt == rec.key)
             rec.go (o,e,evt,d);
@@ -126,5 +126,20 @@ void
 _go_a_pressed (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         writeln ("A! OK!");
+    }
+}
+
+
+struct
+GO_play {
+    GO     go = &_go;
+    string text;
+
+    static
+    void
+    _go (void* o, void* e, REG evt, REG d) {
+        with (cast(GO_play*)e) {
+            writeln (text);
+        }
     }
 }

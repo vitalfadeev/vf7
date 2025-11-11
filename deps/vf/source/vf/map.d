@@ -4,7 +4,9 @@ import vf.types;
 
 struct
 Map {
-    Rec[] recs;
+    //size_t length;
+    //Rec*   ptr;
+    Rec[] s;
 
     struct
     Rec {
