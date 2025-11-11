@@ -1,18 +1,21 @@
-import std.stdio      : writeln,writefln;
-import vf.types       : GO,REG;
-import vf.key_codes   : EVT_KEY_ESC_PRESSED;
-import vf.key_codes   : EVT_APP_QUIT;
-import vf.key_codes   : EVT_KEY_LEFTCTRL_PRESSED,EVT_KEY_LEFTCTRL_RELEASED;
-import vf.key_codes   : EVT_KEY_A_PRESSED;
-import vf.o_base      : O;
-import vf.state       : State;
-import vf.map         : Map;
-import vf.e_base      : E;
+import core.stdc.stdio : printf;
+import vf.types        : GO,REG;
+import vf.key_codes    : EVT_KEY_ESC_PRESSED;
+import vf.key_codes    : EVT_APP_QUIT;
+import vf.key_codes    : EVT_KEY_LEFTCTRL_PRESSED,EVT_KEY_LEFTCTRL_RELEASED;
+import vf.key_codes    : EVT_KEY_A_PRESSED;
+import vf.o_base       : O;
+import vf.state        : State;
+import vf.map          : Map;
+import vf.e_base       : E;
 
-void
+extern(C) 
+void 
 main () {
+    Stacked_e ego;
+
     O o;
-    o.ego = new Stacked_e ();
+    o.ego = &ego;
     o.open ();
     o.go (&o,null,0,0);
 }
@@ -84,7 +87,7 @@ process_map (void* o, void* e, REG evt, REG d,  Map* map) {
 void
 _go_quit (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
-        writeln ("QUIT");
+        printf ("QUIT\n");
         go = null;
     }
 }
@@ -94,7 +97,7 @@ void
 _go_esc (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         // generate new event and put into local input
-        writeln ("  put Event: APP_CODE_QUIT");
+        printf ("  put Event: APP_CODE_QUIT\n");
         local_input.put_reg (EVT_APP_QUIT);
     }
 }
@@ -102,7 +105,7 @@ _go_esc (void* o, void* e, REG evt, REG d) {
 void
 _go_ctrl_pressed (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
-        writeln ("> CTRL pressed");
+        printf ("> CTRL pressed\n");
         *cast(GO*)e = &States.state_ctrl_pressed;
     }
 }
@@ -110,7 +113,7 @@ _go_ctrl_pressed (void* o, void* e, REG evt, REG d) {
 void
 _go_ctrl_released (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
-        writeln ("> CTRL released");
+        printf ("> CTRL released\n");
         *cast(GO*)e = &States.state_base;
     }
 }
@@ -118,28 +121,28 @@ _go_ctrl_released (void* o, void* e, REG evt, REG d) {
 void
 _go_ctrl_a (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
-        writeln ("CTRL+A");
+        printf ("CTRL+A\n");
     }
 }
 
 void
 _go_a_pressed (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
-        writeln ("A! OK!");
+        printf ("A! OK!\n");
     }
 }
 
 
 struct
 GO_play {
-    GO     go = &_go;
-    string text;
+    GO    go = &_go;
+    char* text;
 
     static
     void
     _go (void* o, void* e, REG evt, REG d) {
         with (cast(GO_play*)e) {
-            writeln (text);
+            printf ("%s\n", text);
         }
     }
 }

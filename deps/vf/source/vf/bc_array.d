@@ -42,7 +42,12 @@ Array (T) {
 
     void 
     remove_at (size_t index) {
-        assert(index < length);
+        version (D_BetterC) {
+            if (index < length) return;
+        } else {
+            assert (index < length);
+        }
+        
         // Сдвиг элементов влево
         for (size_t i = index; i + 1 < length; ++i) {
             data[i] = data[i + 1];
