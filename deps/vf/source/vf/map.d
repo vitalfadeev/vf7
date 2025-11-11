@@ -17,27 +17,40 @@ Map {
 alias KEY = REG;
 
 
-//void 
-//Default_go (void* o, void* e, REG c, REG d) {
-//    //
-//};
+//
+mixin template 
+Map_init (Pairs...) {
+    import std.conv : to;
+    import vf.map   : _Map_init;
 
-//struct
-//Act {
-//    string name;
-//    GO     go      = &Default_go;
-//    GO     go_back = &Default_go;
-//}
+    enum string code = "
+        static Map map = {" ~ 
+            (Pairs.length/2).to!string ~ ", 
+            [\n" ~ _Map_init!(Pairs).result ~ "]
+        };";
 
-//struct
-//Map {
-//    Rec[] recs;
+    mixin (code);
+}
 
-//    struct
-//    Rec {
-//        KEY  key;
-//        Act* act;
-//    }
-//}
+template 
+_Map_init (Pairs...) {
+    static if (Pairs.length == 0)
+    {
+        // Базовый случай: пустой набор
+        enum result = "No pairs";
+    }
+    else static if (Pairs.length >= 2)
+    {
+        alias Key   = Pairs[0];
+        alias Value = Pairs[1];
 
-//alias KEY = REG;
+        // Рекурсивно обрабатываем оставшиеся пары
+        enum rest = _Map_init!(Pairs[2 .. $]).result;
+
+        enum result = "Map.Rec (" ~ Key.stringof ~ ", " ~ (&Value).stringof ~ ")" ~ (rest == "No pairs" ? "\n" : ",\n" ~ rest);
+    }
+    else
+    {
+        static assert(0, "Количество элементов в AliasSeq должно быть чётным - пары ключ-значение");
+    }
+}
