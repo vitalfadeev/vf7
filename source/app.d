@@ -57,13 +57,8 @@ go_ctrl_pressed = GO_map!(
 
 
 //
-void
-_go_quit (void* o, void* e, REG evt, REG d) {
-    with (cast(O*)o) {
-        printf ("QUIT\n");
-        go = null;
-    }
-}
+alias 
+_go_quit = GO_quit!"QUIT\n";
 
 
 alias
@@ -96,9 +91,16 @@ _go_play_a = GO_play!"Play A\n";
 
 //
 void
+GO_quit (alias TEXT) (void* o, void* e, REG evt, REG d) {
+    with (cast(O*)o) {
+        printf (TEXT);
+        go = null;
+    }
+}
+
+void
 GO_printf (alias TEXT) (void* o, void* e, REG evt, REG d) {
-    static char* text = cast(char*)TEXT;
-    printf ("%s", text);
+    printf (TEXT);
 }
 
 void
