@@ -60,7 +60,6 @@ go_ctrl_pressed = GO_map!(
 alias 
 _go_quit = GO_quit!"QUIT\n";
 
-
 alias
 _go_esc = GO_local_event_new!EVT_APP_QUIT;
 
