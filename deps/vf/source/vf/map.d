@@ -13,6 +13,16 @@ _Map {
         KEY key;
         GO  go;
     }
+
+    static
+    void
+    process_map (void* o, void* e, REG evt, REG d,  _Map* map) {
+        auto RCX = map.length;
+        auto rec = map.ptr;
+        for (; RCX != 0; rec++, RCX--)
+            if (evt == rec.key)
+                rec.go (o,e,evt,d);
+    }
 }
 
 alias KEY = REG;
@@ -26,14 +36,13 @@ GO_map (Pairs...) {
 
     enum string GO_map = "
         import vf.map   : _Map;
-        import vf.map   : process_map;
 
         static _Map map = {" ~ 
             (Pairs.length/2).to!string ~ ", 
             [\n" ~ _Map_init!(Pairs).result ~ "]
         };
 
-        process_map (o,e,evt,d, &map);
+        _Map.process_map (o,e,evt,d, &map);
         ";
 }
 
@@ -60,11 +69,3 @@ _Map_init (Pairs...) {
     }
 }
 
-void
-process_map (void* o, void* e, REG evt, REG d,  _Map* map) {
-    auto RCX = map.length;
-    auto rec = map.ptr;
-    for (; RCX != 0; rec++, RCX--)
-        if (evt == rec.key)
-            rec.go (o,e,evt,d);
-}
