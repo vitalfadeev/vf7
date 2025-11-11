@@ -24,16 +24,10 @@ GO_stacked {
     GO _this = &go_stacked;
     GO _next = &go_base;
 
-    //GO         go;  // = go
-    //State.go   go;  // = go
-    //E.State.go go;  // = go
-
     static
     void 
     go_stacked (void* o, void* e, REG evt, REG d) {
-        GO_map!(
-            EVT_KEY_ESC_PRESSED,       _go_esc,
-        ) (o,e,evt,d);
+        go_stacked_this (o,e,evt,d);
 
         with (cast(GO_stacked*)e) {
             _next (o,&_next,evt,d);
@@ -41,18 +35,22 @@ GO_stacked {
     }
 }
 
-// global keys - translate
-// local keys  - quit, ctrl+a
-
 //
-alias go_base = GO_map!(
+alias
+go_stacked_this = GO_map!(
+    EVT_KEY_ESC_PRESSED,       _go_esc,
+);
+
+alias 
+go_base = GO_map!(
     EVT_APP_QUIT,              _go_quit,
     EVT_KEY_LEFTCTRL_PRESSED,  _go_ctrl_pressed,
     EVT_KEY_A_PRESSED,         _go_a_pressed,
     /* EVT_KEY_Q_PRESSED,         _go_play_a), */
 );
 
-alias go_ctrl_pressed = GO_map!(
+alias 
+go_ctrl_pressed = GO_map!(
     EVT_KEY_LEFTCTRL_RELEASED, _go_ctrl_released,
     EVT_KEY_A_PRESSED,         _go_ctrl_a,
 );

@@ -4,25 +4,19 @@ import vf.types;
 
 
 struct
-_Map {
-    size_t length;
-    Rec*   ptr;
+Map_rec {
+    KEY key;
+    GO  go;
+}
 
-    struct
-    Rec {
-        KEY key;
-        GO  go;
-    }
-
-    static
-    void
-    process_map (void* o, void* e, REG evt, REG d,  _Map* map) {
-        auto RCX = map.length;
-        auto rec = map.ptr;
-        for (; RCX != 0; rec++, RCX--)
-            if (evt == rec.key)
-                rec.go (o,e,evt,d);
-    }
+static
+void
+process_map (void* o, void* e, REG evt, REG d,  size_t map_length, Map_rec* map_ptr) {
+    auto RCX = map_length;
+    auto rec = map_ptr;
+    for (; RCX != 0; rec++, RCX--)
+        if (evt == rec.key)
+            rec.go (o,e,evt,d);
 }
 
 alias KEY = REG;
@@ -31,33 +25,28 @@ alias KEY = REG;
 //
 void
 GO_map (Pairs...) (void* o, void* e, REG evt, REG d) {
-    import app;
-    mixin (GO_map_code!Pairs);
+    static Map_rec[ GO_map_length!Pairs ] map = GO_map_array!Pairs;
+    process_map (o,e,evt,d, map.length, map.ptr);
 }
 
 template
-GO_map_code (Pairs...) {
-    import std.conv : to;
-    import vf.map   : _Map_init;
+GO_map_length (Pairs...) {
+    enum GO_map_length = Pairs.length/2;
+}
 
-    enum GO_map_code = "
-        import vf.map : _Map;
-
-        static _Map map = {" ~ 
-            (Pairs.length/2).to!string ~ ", 
-            [\n" ~ _Map_init!(Pairs).result ~ "]
-        };
-
-        _Map.process_map (o,e,evt,d, &map);
-    ";
+template
+GO_map_array (Pairs...) {
+    enum GO_map_array = [GO_map_array_init!(Pairs).result];
 }
 
 template 
-_Map_init (Pairs...) {
+GO_map_array_init (Pairs...) {
+    import std.meta : AliasSeq;
+
     static if (Pairs.length == 0)
     {
         // Базовый случай: пустой набор
-        enum result = "No pairs";
+        enum result = AliasSeq!();
     }
     else static if (Pairs.length >= 2)
     {
@@ -65,9 +54,9 @@ _Map_init (Pairs...) {
         alias Value = Pairs[1];
 
         // Рекурсивно обрабатываем оставшиеся пары
-        enum rest = _Map_init!(Pairs[2 .. $]).result;
+        enum rest = GO_map_array_init!(Pairs[2 .. $]).result;
 
-        enum result = "_Map.Rec (" ~ Key.stringof ~ ", " ~ (&Value).stringof ~ ")" ~ (rest == "No pairs" ? "\n" : ",\n" ~ rest);
+        enum result = AliasSeq!(Map_rec (Key,&Value), rest);
     }
     else
     {
