@@ -10,6 +10,7 @@ import vf.state        : State;
 import vf.map          : Map;
 import vf.e_base       : E;
 import vf.map          : Map_init;
+import vf.map          : process_map;
 
 extern(C) 
 void 
@@ -39,6 +40,7 @@ Stacked_e {
         );
 
         process_map (o,e,evt,d, &map);
+
         with (cast(Stacked_e*)e) {
             _next (o,&_next,evt,d);
         }
@@ -76,14 +78,6 @@ States {
     }
 }
 
-void
-process_map (void* o, void* e, REG evt, REG d,  Map* map) {
-    auto RCX = map.length;
-    auto rec = map.ptr;
-    for (; RCX != 0; rec++, RCX--)
-        if (evt == rec.key)
-            rec.go (o,e,evt,d);
-}
 
 
 //

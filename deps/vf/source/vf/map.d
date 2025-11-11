@@ -27,9 +27,19 @@ Map_init (Pairs...) {
         static Map map = {" ~ 
             (Pairs.length/2).to!string ~ ", 
             [\n" ~ _Map_init!(Pairs).result ~ "]
-        };";
+        };
+        ";
 
     mixin (code);
+}
+
+void
+process_map (void* o, void* e, REG evt, REG d,  Map* map) {
+    auto RCX = map.length;
+    auto rec = map.ptr;
+    for (; RCX != 0; rec++, RCX--)
+        if (evt == rec.key)
+            rec.go (o,e,evt,d);
 }
 
 template 
