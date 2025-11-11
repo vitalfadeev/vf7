@@ -1,6 +1,6 @@
 module vf.bc_stubs;
 
-
+version (D_BetterC):
 // _d_assertp
 extern(C) 
 void 
