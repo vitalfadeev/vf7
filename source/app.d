@@ -21,8 +21,8 @@ main () {
 
 struct
 GO_stacked {
-    GO _this = &_this_state;
-    GO _next = &States.state_base;
+    GO _this = &go_stacked;
+    GO _next = &go_base;
 
     //GO         go;  // = go
     //State.go   go;  // = go
@@ -30,10 +30,10 @@ GO_stacked {
 
     static
     void 
-    _this_state (void* o, void* e, REG evt, REG d) {
-        mixin (GO_map!(
+    go_stacked (void* o, void* e, REG evt, REG d) {
+        GO_map!(
             EVT_KEY_ESC_PRESSED,       _go_esc,
-        ));
+        ) (o,e,evt,d);
 
         with (cast(GO_stacked*)e) {
             _next (o,&_next,evt,d);
@@ -45,29 +45,17 @@ GO_stacked {
 // local keys  - quit, ctrl+a
 
 //
-struct
-States {
-    static
-    void 
-    state_base (void* o, void* e, REG evt, REG d) {
-        mixin (GO_map!(
-            EVT_APP_QUIT,              _go_quit,
-            EVT_KEY_LEFTCTRL_PRESSED,  _go_ctrl_pressed,
-            EVT_KEY_A_PRESSED,         _go_a_pressed,
-            /* EVT_KEY_Q_PRESSED,         _go_play_a), */
-        ));
-    }
+alias go_base = GO_map!(
+    EVT_APP_QUIT,              _go_quit,
+    EVT_KEY_LEFTCTRL_PRESSED,  _go_ctrl_pressed,
+    EVT_KEY_A_PRESSED,         _go_a_pressed,
+    /* EVT_KEY_Q_PRESSED,         _go_play_a), */
+);
 
-    static
-    void 
-    state_ctrl_pressed (void* o, void* e, REG evt, REG d) {
-        mixin (GO_map!(
-            EVT_KEY_LEFTCTRL_RELEASED, _go_ctrl_released,
-            EVT_KEY_A_PRESSED,         _go_ctrl_a,
-        ));
-    }
-}
-
+alias go_ctrl_pressed = GO_map!(
+    EVT_KEY_LEFTCTRL_RELEASED, _go_ctrl_released,
+    EVT_KEY_A_PRESSED,         _go_ctrl_a,
+);
 
 
 //
@@ -93,7 +81,7 @@ void
 _go_ctrl_pressed (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         printf ("> CTRL pressed\n");
-        *cast(GO*)e = &States.state_ctrl_pressed;
+        *cast(GO*)e = &go_ctrl_pressed;
     }
 }
 
@@ -101,7 +89,7 @@ void
 _go_ctrl_released (void* o, void* e, REG evt, REG d) {
     with (cast(O*)o) {
         printf ("> CTRL released\n");
-        *cast(GO*)e = &States.state_base;
+        *cast(GO*)e = &go_base;
     }
 }
 

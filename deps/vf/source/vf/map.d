@@ -29,13 +29,19 @@ alias KEY = REG;
 
 
 //
-template 
-GO_map (Pairs...) {
+void
+GO_map (Pairs...) (void* o, void* e, REG evt, REG d) {
+    import app;
+    mixin (GO_map_code!Pairs);
+}
+
+template
+GO_map_code (Pairs...) {
     import std.conv : to;
     import vf.map   : _Map_init;
 
-    enum string GO_map = "
-        import vf.map   : _Map;
+    enum GO_map_code = "
+        import vf.map : _Map;
 
         static _Map map = {" ~ 
             (Pairs.length/2).to!string ~ ", 
@@ -43,7 +49,7 @@ GO_map (Pairs...) {
         };
 
         _Map.process_map (o,e,evt,d, &map);
-        ";
+    ";
 }
 
 template 
