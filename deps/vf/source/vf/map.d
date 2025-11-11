@@ -9,7 +9,6 @@ Map_rec {
     GO  go;
 }
 
-static
 void
 process_map (void* o, void* e, REG evt, REG d,  size_t map_length, Map_rec* map_ptr) {
     auto RCX = map_length;
@@ -25,13 +24,11 @@ alias KEY = REG;
 //
 void
 GO_map (Pairs...) (void* o, void* e, REG evt, REG d) {
-    static Map_rec[ GO_map_length!Pairs ] map = GO_map_array!Pairs;
-    process_map (o,e,evt,d, map.length, map.ptr);
-}
+    alias _array = GO_map_array!Pairs;  // [Rec (Key,Value), ...]
+    
+    static Map_rec[ _array.length ] map = _array;
 
-template
-GO_map_length (Pairs...) {
-    enum GO_map_length = Pairs.length/2;
+    process_map (o,e,evt,d, map.length, map.ptr);
 }
 
 template
@@ -54,8 +51,7 @@ GO_map_array_init (Pairs...) {
         alias Value = Pairs[1];
 
         // Рекурсивно обрабатываем оставшиеся пары
-        enum rest = GO_map_array_init!(Pairs[2 .. $]).result;
-
+        enum rest   = GO_map_array_init!(Pairs[2 .. $]).result;
         enum result = AliasSeq!(Map_rec (Key,&Value), rest);
     }
     else

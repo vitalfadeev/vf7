@@ -3,8 +3,6 @@ module vf.o_base;
 import vf.types       : GO,REG;
 import vf.input       : Input,Event;
 import vf.local_input : Local_input;
-import vf.state       : State;
-import vf.map         : GO_map;
 
 ///
 struct
@@ -68,97 +66,6 @@ O {
         }
     }
 }
-
-struct
-O_base {
-    GO go = &_go;
-
-    static
-    void 
-    _go (void* a, void* b, REG c, REG d) {
-        with (cast(O_stated*)a) {
-            //
-        }
-    };
-}
-
-struct
-O_alt {
-    GO go = &go_base;
-
-    static
-    void 
-    go_base (void* a, void* b, REG c, REG d) {
-        with (cast(O_alt*)a) {
-            go = &go_alt;
-        }
-    };
-
-    static
-    void 
-    go_alt (void* a, void* b, REG c, REG d) {
-        with (cast(O_alt*)a) {
-            go = &go_base;
-        }
-    };
-}
-
-struct
-O_stated {
-    GO    go = &_go;
-    void* state = cast (void*) &States.state_base;
-
-    struct
-    States {
-        static 
-        __gshared {
-            State_base state_base;
-            State_alt  state_alt;
-        }
-    }
-
-    static
-    void 
-    _go (void* a, void* b, REG c, REG d) {
-        with (cast(O_stated*)a) {
-            (cast (State*) state).go (a,b,c,d);
-        }
-    };
-
-    struct
-    State {
-        GO go = &_go;
-    }
-
-    struct
-    State_base {
-        State _state = State (&_go);
-        void* custom_field;
-
-        static
-        void 
-        _go (void* a, void* b, REG c, REG d) {
-            with (cast(O_stated*)a) {
-                state = &States.state_alt;
-            }
-        };
-    }
-
-    struct
-    State_alt {
-        State _state = State (&_go);
-        void* custom_field;
-
-        static
-        void 
-        _go (void* a, void* b, REG c, REG d) {
-            with (cast(O_stated*)a) {
-                state = &States.state_base;
-            }
-        };
-    }
-}
-
 
 // input  line
 // direct line

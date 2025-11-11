@@ -3,7 +3,6 @@ module vf.input;
 import core.sys.posix.unistd   : read, close;
 import core.sys.posix.fcntl    : open, O_RDONLY, O_NONBLOCK;
 import core.sys.posix.sys.time : timeval;
-//import std.exception           : enforce;
 import vf.types;
 import vf.key_codes;
 
