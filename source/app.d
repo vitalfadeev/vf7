@@ -6,11 +6,7 @@ import vf.key_codes    : EVT_KEY_LEFTCTRL_PRESSED,EVT_KEY_LEFTCTRL_RELEASED;
 import vf.key_codes    : EVT_KEY_A_PRESSED;
 import vf.key_codes    : EVT_KEY_Q_PRESSED;
 import vf.o_base       : O;
-import vf.state        : State;
-import vf.map          : Map;
-import vf.e_base       : E;
 import vf.map          : Map_init;
-import vf.map          : process_map;
 
 extern(C) 
 void 

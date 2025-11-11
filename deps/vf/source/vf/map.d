@@ -2,6 +2,7 @@ module vf.map;
 
 import vf.types;
 
+
 struct
 Map {
     size_t length;
@@ -15,7 +16,6 @@ Map {
 }
 
 alias KEY = REG;
-
 
 //
 template 
@@ -31,15 +31,6 @@ Map_init (Pairs...) {
 
         process_map (o,e,evt,d, &map);
         ";
-}
-
-void
-process_map (void* o, void* e, REG evt, REG d,  Map* map) {
-    auto RCX = map.length;
-    auto rec = map.ptr;
-    for (; RCX != 0; rec++, RCX--)
-        if (evt == rec.key)
-            rec.go (o,e,evt,d);
 }
 
 template 
@@ -63,4 +54,13 @@ _Map_init (Pairs...) {
     {
         static assert(0, "Количество элементов в AliasSeq должно быть чётным - пары ключ-значение");
     }
+}
+
+void
+process_map (void* o, void* e, REG evt, REG d,  Map* map) {
+    auto RCX = map.length;
+    auto rec = map.ptr;
+    for (; RCX != 0; rec++, RCX--)
+        if (evt == rec.key)
+            rec.go (o,e,evt,d);
 }
