@@ -1,6 +1,6 @@
 module vf.local_input;
 
-import vf.input : Event;
+import vf.input    : Event;
 import vf.bc_array : Array;
 
 //

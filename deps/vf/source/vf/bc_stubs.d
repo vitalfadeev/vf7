@@ -24,6 +24,20 @@ _d_assertp (const(char)* file, uint line) {
 
 extern(C) 
 void 
+_d_assert_msg (bool condition, string expr, string file, size_t line) {
+    import core.stdc.stdio  : printf;
+    import core.stdc.stdlib : exit;
+
+    if (!condition) {
+        //printf ("Assertion failed: ", expr, "\nFile: ", file, "\nLine: ", line);
+        printf ("Assertion failed: ");
+        exit (1);
+    }
+}
+
+
+extern(C) 
+void 
 _d_dso_registry () {
     // Пустая функция-заглушка для подавления ошибок линковки
     // В режиме betterC нет полноценного runtime, поэтому просто ничего не делать

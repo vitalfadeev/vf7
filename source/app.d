@@ -106,7 +106,6 @@ _go_a_pressed (void* o, void* e, REG evt, REG d) {
 }
 
 
-__gshared
 GO_play _go_play_a = GO_play (&GO_play._go, cast(char*)"Play A");
 
 struct

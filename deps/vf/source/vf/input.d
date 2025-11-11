@@ -15,11 +15,10 @@ Input {
 
     void
     open () {
-        device = 
-            Device.open_read_only (
-                "/dev/input/event8", 
-                /* non_blocking */ false
-            );        
+        device.open_read_only (
+            cast(char*)"/dev/input/event8", 
+            /* non_blocking */ false
+        );        
     }
 
     bool 
@@ -35,31 +34,32 @@ Device {
 
     @disable this (this); // non-copyable
 
-    ~this () @nogc {
+    ~this () @nogc nothrow  {
         if (fd >= 0) {
             close (fd);
             fd = -1;
         }
     }
 
-    static 
-    Device
-    open_read_only (string path, bool non_blocking = true) {
+    void
+    open_read_only (char* path, bool non_blocking = true) nothrow {
         const flags = non_blocking ? (O_RDONLY | O_NONBLOCK) : O_RDONLY;
-        auto d = Device ();
-        d.fd = open (path.ptr, flags);
-        //enforce (d.fd >= 0, "Failed to open evdev device: " ~ path);
-        if (d.fd == 0) {
-            assert (0, "Failed to open evdev device: ");
+        fd = open (path, flags);
+        if (fd == 0) {
+            import core.stdc.stdio  : fprintf,stderr;
+            import core.stdc.stdlib : exit;
+            fprintf (stderr,"Failed to open evdev device: %s\n", path);
+            exit (1);
         }
-        return d;
     }
 
     bool 
     read (Event* ev) /*@nogc nothrow*/ {
         static if (Event.sizeof != 24) {
-            pragma (msg, Event.sizeof);
-            assert (0, "expected on 64-bit");
+            import core.stdc.stdio  : fprintf,stderr;
+            import core.stdc.stdlib : exit;
+            fprintf (stderr,"expected on 64-bit: %d\n", Event.sizeof);
+            exit (1);
         }
         auto n = .read (fd, ev, Event.sizeof);
         if (n == Event.sizeof) return true;
