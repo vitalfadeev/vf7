@@ -9,6 +9,12 @@ import vf.o_base       : O;
 import vf.map          : GO_map;
 import importc;
 
+import vf.key_codes    : EVT_REL_MOVED;
+import vf.key_codes    : UI_POINTER_IN;
+import vf.key_codes    : UI_POINTER_OVER;
+import vf.key_codes    : UI_POINTER_OUT;
+
+
 extern(C) 
 void 
 main () {
@@ -126,4 +132,87 @@ GO_play (int resource_id) (void* o, void* e, REG evt, REG d) {
         audio.play_wav (resource_id);
     }
 }
+
+//
+void
+GO_ui (void* o, void* e, REG evt, REG d) {
+    with (cast(O*)o) {
+        if (evt == EVT_REL_MOVED) {
+            //go_ui_each (o,e,evt,d);
+        }
+    }
+}
+
+struct
+UI_element {
+    GO     go = &_go;
+    UI*    l;
+    UI*    r;
+    UI*    v;
+    ubyte  flags;
+    Style* styles;  // base, hover
+    Style  style_calculated;
+
+    alias UI = UI_element;
+
+    enum 
+    Flags {
+        mouse_over = 0b00000001,
+    }
+
+    static
+    void
+    _go (void* o, void* e, REG evt, REG d) {
+        with (cast(O*)o) {
+            if (evt == EVT_REL_MOVED) {
+                with (cast(UI_element*)e)
+                if ((cast(UI_element*)e).hit_test (o,e,evt,d)) {
+                    if (flags & Flags.mouse_over) {
+                        local_input.put_reg (UI_POINTER_OVER,e);
+                    } 
+                    else {
+                        flags |= Flags.mouse_over;
+                        local_input.put_reg (UI_POINTER_IN,e);
+                    }
+                }
+                else {
+                    if (flags & Flags.mouse_over) {
+                        flags &= !Flags.mouse_over;
+                        local_input.put_reg (UI_POINTER_OUT,e);
+                    }                     
+                }
+            }
+
+            if (evt == UI_POINTER_IN) {
+                // change style
+                //   back color
+            }
+
+            if (evt == UI_POINTER_OVER) {
+                // change style
+                //   back color
+            }
+
+            if (evt == UI_POINTER_OUT) {
+                // change style
+                //   back color
+            }
+        }
+    }
+
+    static
+    bool
+    hit_test (void* o, void* e, REG evt, REG d) {
+        return false;
+    }
+}
+
+struct
+Style {
+    Color  bg;
+    Color  fg;
+    Style* next;
+}
+
+alias Color = uint;
 

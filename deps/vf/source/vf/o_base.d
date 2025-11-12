@@ -24,7 +24,7 @@ O {
         input.open ();
         local_input.open ();
         audio.open ();
-        video.open ();
+        //video.open ();
     }
 
     // base
@@ -55,7 +55,7 @@ O {
             while (!local_input.empty) {
                 local_input.read ();
                 // process local input event
-                evt = local_input.event.reg;
+                evt = local_input.event.event.reg;
                 _go3 (o,e,evt,d);
             }
         }

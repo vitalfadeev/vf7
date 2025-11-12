@@ -35,10 +35,10 @@ Array (T) {
         return data[i];
     }
 
-    T 
-    opIndex (size_t i) const {
-        return data[i];
-    }
+    //T 
+    //opIndex (size_t i) const {
+    //    return data[i];
+    //}
 
     void 
     remove_at (size_t index) {

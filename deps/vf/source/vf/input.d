@@ -3,7 +3,7 @@ module vf.input;
 import core.sys.posix.unistd   : read, close;
 import core.sys.posix.fcntl    : open, O_RDONLY, O_NONBLOCK;
 import core.sys.posix.sys.time : timeval;
-import vf.types;
+import vf.types                : REG;
 import vf.key_codes;
 
 
@@ -16,7 +16,7 @@ Input {
     void
     open () {
         device.open_read_only (
-            cast(char*)"/dev/input/event8", 
+            cast(char*)"/dev/input/event5", 
             /* non_blocking */ false
         );        
     }
