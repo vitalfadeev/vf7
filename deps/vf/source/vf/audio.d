@@ -14,20 +14,44 @@ Audio {
     open () {    
         init_sdl ();
         open_audio_resources ();
+        open_audio_device ();
     }
 
     void
     close () {
         // Clean up
-        SDL_CloseAudioDevice (deviceId);
+        close_audio_device ();
         close_audio_resources ();
         SDL_Quit ();        
     }
 
     void
     open_audio_resources () {
+        resources[1].filename = cast (char*) "test-1.wav";
+        resources[2].filename = cast (char*) "test-2.wav";
+        resources[3].filename = cast (char*) "test-3.wav";
+
         foreach (ref res; resources)
             res.open ();
+    }
+
+    void
+    open_audio_device () {
+        with (resources[1]) {
+            deviceId = SDL_OpenAudioDevice (null, 0, &wavSpec, null, 0);
+            // Open audio device
+            if (deviceId == 0) {
+                printf ("Failed to open audio device: %s\n", SDL_GetError ());
+                SDL_FreeWAV (wavBuffer);
+                SDL_Quit ();
+                abort ();
+            }
+        }
+    }
+
+    void
+    close_audio_device () {
+        SDL_CloseAudioDevice (deviceId);
     }
 
     void
@@ -39,15 +63,6 @@ Audio {
     void
     play_wav (int resource_id) {
         with (resources[resource_id]) {
-            // Open audio device
-            deviceId = SDL_OpenAudioDevice (null, 0, &wavSpec, null, 0);
-            if (deviceId == 0) {
-                printf ("Failed to open audio device: %s\n", SDL_GetError ());
-                SDL_FreeWAV (wavBuffer);
-                SDL_Quit ();
-                abort ();
-            }
-
             // Play audio by queuing the buffer and unpausing device
             SDL_QueueAudio (deviceId, wavBuffer, wavLength);
             SDL_PauseAudioDevice (deviceId, 0); // Unpause to start playback

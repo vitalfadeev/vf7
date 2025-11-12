@@ -4,7 +4,7 @@ import vf.key_codes    : EVT_KEY_ESC_PRESSED;
 import vf.key_codes    : EVT_APP_QUIT;
 import vf.key_codes    : EVT_KEY_LEFTCTRL_PRESSED,EVT_KEY_LEFTCTRL_RELEASED;
 import vf.key_codes    : EVT_KEY_A_PRESSED;
-import vf.key_codes    : EVT_KEY_Q_PRESSED;
+import vf.key_codes    : EVT_KEY_Q_PRESSED,EVT_KEY_W_PRESSED,EVT_KEY_E_PRESSED;
 import vf.o_base       : O;
 import vf.map          : GO_map;
 import importc;
@@ -47,7 +47,9 @@ go_base = GO_map!(
     EVT_APP_QUIT,              _go_quit,
     EVT_KEY_LEFTCTRL_PRESSED,  _go_ctrl_pressed,
     EVT_KEY_A_PRESSED,         _go_a_pressed,
-    EVT_KEY_Q_PRESSED,         _go_play_a,
+    EVT_KEY_Q_PRESSED,         _go_play_1,
+    EVT_KEY_W_PRESSED,         _go_play_2,
+    EVT_KEY_E_PRESSED,         _go_play_3,
 );
 
 alias 
@@ -87,7 +89,13 @@ alias
 _go_a_pressed = GO_printf!"A! OK!\n";
 
 alias
-_go_play_a = GO_play!"Play A\n";
+_go_play_1 = GO_play!("Play A\n",1);
+
+alias
+_go_play_2 = GO_play!("Play A\n",2);
+
+alias
+_go_play_3 = GO_play!("Play A\n",3);
 
 //
 void
@@ -112,10 +120,10 @@ GO_local_event_new (REG EVT) (void* o, void* e, REG evt, REG d) {
 }
 
 void
-GO_play (alias TEXT) (void* o, void* e, REG evt, REG d) {
+GO_play (alias TEXT, int resource_id) (void* o, void* e, REG evt, REG d) {
     static char* text = cast(char*)TEXT;
     printf ("%s", text);
     with (cast(O*)o) {
-        audio.play_wav (1);
+        audio.play_wav (resource_id);
     }
 }
