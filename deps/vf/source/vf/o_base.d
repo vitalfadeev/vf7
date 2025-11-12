@@ -4,6 +4,7 @@ import vf.types       : GO,REG;
 import vf.input       : Input,Event;
 import vf.local_input : Local_input;
 import vf.audio       : Audio;
+import vf.video       : Video;
 
 ///
 struct
@@ -12,6 +13,7 @@ O {
     Input       input;
     Local_input local_input;
     Audio       audio;
+    Video       video;
     void*       ego;
     // update
     // output
@@ -22,6 +24,7 @@ O {
         input.open ();
         local_input.open ();
         audio.open ();
+        video.open ();
     }
 
     // base

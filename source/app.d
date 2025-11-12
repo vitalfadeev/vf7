@@ -126,3 +126,4 @@ GO_play (int resource_id) (void* o, void* e, REG evt, REG d) {
         audio.play_wav (resource_id);
     }
 }
+
