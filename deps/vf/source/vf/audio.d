@@ -39,7 +39,7 @@ Audio {
     void
     open_audio_device () {
         // Инициализация SDL_mixer с параметрами аудио
-        if (Mix_OpenAudio (22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
+        if (Mix_OpenAudio (44100, MIX_DEFAULT_FORMAT, 2, 256) == -1) {
             printf ("Can't init SDL_mixer: %s\n", Mix_GetError ());
             SDL_Quit ();
             abort ();
