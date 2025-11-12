@@ -3,6 +3,7 @@ module vf.o_base;
 import vf.types       : GO,REG;
 import vf.input       : Input,Event;
 import vf.local_input : Local_input;
+import vf.audio       : Audio;
 
 ///
 struct
@@ -10,6 +11,7 @@ O {
     GO          go = &_go;
     Input       input;
     Local_input local_input;
+    Audio       audio;
     void*       ego;
     // update
     // output
@@ -19,6 +21,7 @@ O {
     open () {
         input.open ();
         local_input.open ();
+        audio.open ();
     }
 
     // base

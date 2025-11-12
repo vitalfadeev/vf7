@@ -7,6 +7,7 @@ import vf.key_codes    : EVT_KEY_A_PRESSED;
 import vf.key_codes    : EVT_KEY_Q_PRESSED;
 import vf.o_base       : O;
 import vf.map          : GO_map;
+import importc;
 
 extern(C) 
 void 
@@ -114,4 +115,7 @@ void
 GO_play (alias TEXT) (void* o, void* e, REG evt, REG d) {
     static char* text = cast(char*)TEXT;
     printf ("%s", text);
+    with (cast(O*)o) {
+        audio.play_wav (1);
+    }
 }

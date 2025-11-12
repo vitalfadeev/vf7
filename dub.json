@@ -6,12 +6,12 @@
 	"description" : "A minimal D application.",
 	"license"     : "proprietary",
 	"dependencies" : {
-		"vf"    : {"path": "./deps/vf"},
+		"vf"    	 : {"path": "./deps/vf"},
 	},
 	"versions"     : [],
 	"dflags"       : [ "-mixin=mixins.d" ],
 	"buildOptions" : ["ignoreDeprecations"],
 	"dflags-ldc": [
   		"--link-defaultlib-shared"
-	]
+	],
 }
