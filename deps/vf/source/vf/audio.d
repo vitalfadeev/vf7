@@ -59,10 +59,7 @@ Audio {
 
     void
     play_wav (int resource_id) {
-        with (resources[resource_id]) {
-            // Play audio by queuing the buffer and unpausing device
-            Mix_PlayChannel (-1, sound, 0);
-        }
+        Mix_PlayChannel (-1, resources[resource_id].sound, 0);
     }
 }
 

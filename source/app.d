@@ -89,13 +89,13 @@ alias
 _go_a_pressed = GO_printf!"A! OK!\n";
 
 alias
-_go_play_1 = GO_play!("Play A\n",1);
+_go_play_1 = GO_play!(1);
 
 alias
-_go_play_2 = GO_play!("Play A\n",2);
+_go_play_2 = GO_play!(2);
 
 alias
-_go_play_3 = GO_play!("Play A\n",3);
+_go_play_3 = GO_play!(3);
 
 //
 void
@@ -120,9 +120,8 @@ GO_local_event_new (REG EVT) (void* o, void* e, REG evt, REG d) {
 }
 
 void
-GO_play (alias TEXT, int resource_id) (void* o, void* e, REG evt, REG d) {
-    static char* text = cast(char*)TEXT;
-    printf ("%s", text);
+GO_play (int resource_id) (void* o, void* e, REG evt, REG d) {
+    printf ("Play %d\n", resource_id);
     with (cast(O*)o) {
         audio.play_wav (resource_id);
     }
