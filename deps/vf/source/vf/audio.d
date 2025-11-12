@@ -13,8 +13,8 @@ Audio {
     void
     open () {    
         init_sdl ();
-        open_audio_resources ();
         open_audio_device ();
+        open_audio_resources ();
     }
 
     void
@@ -27,6 +27,7 @@ Audio {
 
     void
     open_audio_resources () {
+        resources[0].filename = cast (char*) "test.wav";
         resources[1].filename = cast (char*) "test-1.wav";
         resources[2].filename = cast (char*) "test-2.wav";
         resources[3].filename = cast (char*) "test-3.wav";
@@ -37,21 +38,17 @@ Audio {
 
     void
     open_audio_device () {
-        with (resources[1]) {
-            deviceId = SDL_OpenAudioDevice (null, 0, &wavSpec, null, 0);
-            // Open audio device
-            if (deviceId == 0) {
-                printf ("Failed to open audio device: %s\n", SDL_GetError ());
-                SDL_FreeWAV (wavBuffer);
-                SDL_Quit ();
-                abort ();
-            }
+        // Инициализация SDL_mixer с параметрами аудио
+        if (Mix_OpenAudio (22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
+            printf ("Can't init SDL_mixer: %s\n", Mix_GetError ());
+            SDL_Quit ();
+            abort ();
         }
     }
 
     void
     close_audio_device () {
-        SDL_CloseAudioDevice (deviceId);
+        Mix_CloseAudio ();
     }
 
     void
@@ -64,8 +61,7 @@ Audio {
     play_wav (int resource_id) {
         with (resources[resource_id]) {
             // Play audio by queuing the buffer and unpausing device
-            SDL_QueueAudio (deviceId, wavBuffer, wavLength);
-            SDL_PauseAudioDevice (deviceId, 0); // Unpause to start playback
+            Mix_PlayChannel (-1, sound, 0);
         }
     }
 }
@@ -76,21 +72,25 @@ Audion_resource {
     SDL_AudioSpec wavSpec;
     Uint32        wavLength;
     Uint8*        wavBuffer;
+    Mix_Chunk*    sound;
 
     void
     open () {
-        if (filename !is null)
         // Load WAV file
-        if (SDL_LoadWAV (filename, &wavSpec, &wavBuffer, &wavLength) == null) {
-            printf ("Failed to load WAV file: %s\n", SDL_GetError ());
-            SDL_Quit ();
-            abort ();
+        if (filename !is null) {
+            sound = Mix_LoadWAV (filename);
+            if (!sound) {
+                printf ("Can't cload wav file: %s\n", Mix_GetError ());
+                Mix_CloseAudio ();
+                SDL_Quit ();
+                abort ();
+            }
         }
-    }
+     }
 
     void
     close () {
-        SDL_FreeWAV (wavBuffer);
+        Mix_FreeChunk (sound);
     }
 }
 
@@ -102,3 +102,7 @@ init_sdl () {
     }
 }
 
+alias Mix_GetError = SDL_GetError;
+enum MIX_DEFAULT_FORMAT = AUDIO_S16SYS;
+enum AUDIO_S16SYS = AUDIO_S16LSB;
+enum AUDIO_S16LSB = 0x8010;

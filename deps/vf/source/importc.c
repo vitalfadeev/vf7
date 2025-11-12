@@ -7,4 +7,5 @@
 #define SDL_DISABLE_EMMINTRIN_H
 
 #include "SDL.h"
+#include "SDL_mixer.h"
 
