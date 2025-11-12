@@ -27,10 +27,10 @@ Audio {
 
     void
     open_audio_resources () {
-        resources[0].filename = cast (char*) "test.wav";
-        resources[1].filename = cast (char*) "test-1.wav";
-        resources[2].filename = cast (char*) "test-2.wav";
-        resources[3].filename = cast (char*) "test-3.wav";
+        resources[0].filename = cast (char*) "resources/test.wav";
+        resources[1].filename = cast (char*) "resources/test-1.wav";
+        resources[2].filename = cast (char*) "resources/test-2.wav";
+        resources[3].filename = cast (char*) "resources/test-3.wav";
 
         foreach (ref res; resources)
             res.open ();
@@ -65,7 +65,7 @@ Audio {
 
 struct
 Audion_resource {
-    char*         filename = cast (char*) "test.wav";
+    char*         filename = cast (char*) "resources/test.wav";
     SDL_AudioSpec wavSpec;
     Uint32        wavLength;
     Uint8*        wavBuffer;
