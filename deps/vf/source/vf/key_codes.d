@@ -43,8 +43,15 @@ enum ulong UI_POINTER_OVER           = (3     << 16) | EVT_UI;
 enum ulong UI_POINTER_OUT            = (4     << 16) | EVT_UI;
 
 enum       EVT_DEV                   = 0x0300;
-enum       DEV_CODE_NEW_DEVICE       = 0x0001;
-enum       DEV_CODE_REMOVE_DEVICE    = 0x0002;
-enum ulong EVT_DEV_NEW_DEVICE        = (DEV_CODE_NEW_DEVICE     << 16) | EVT_DEV;
-enum ulong EVT_DEV_REMOVE_DEVICE     = (DEV_CODE_REMOVE_DEVICE  << 16) | EVT_DEV;
-
+enum       DEV_CODE_ADD              = 0x0001;
+enum       DEV_CODE_REMOVE           = 0x0002;
+enum       DEV_CODE_CHANGE           = 0x0003;
+enum       DEV_CODE_MOVE             = 0x0004;
+enum       DEV_CODE_ONLINE           = 0x0005;
+enum       DEV_CODE_OFFLINE          = 0x0006;
+enum ulong EVT_DEV_ADD               = (DEV_CODE_ADD     << 16) | EVT_DEV;
+enum ulong EVT_DEV_REMOVE            = (DEV_CODE_REMOVE  << 16) | EVT_DEV;
+enum ulong EVT_DEV_CHANGE            = (DEV_CODE_CHANGE  << 16) | EVT_DEV;
+enum ulong EVT_DEV_MOVE              = (DEV_CODE_MOVE    << 16) | EVT_DEV;
+enum ulong EVT_DEV_ONLINE            = (DEV_CODE_ONLINE  << 16) | EVT_DEV;
+enum ulong EVT_DEV_OFFLINE           = (DEV_CODE_OFFLINE << 16) | EVT_DEV;
